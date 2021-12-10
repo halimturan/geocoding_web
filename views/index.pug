@@ -1,0 +1,16 @@
+extends layout
+
+block stylesheet
+  link(rel="stylesheet", href="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.css")
+  link(rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css")
+
+block content
+  div(id="map")
+  div(id="search_box")
+    input(type="text" placeholder="Arama Yap" onKeyUp="typewatch(function(){alert('Time elapsed!');}, 1000 );" id="search_input")
+    i(class="fa fa-search" style="margin-left: -25px")
+    div(id="search_result_box")
+      ul(id="search_result_list")
+  script(src="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.js")
+  script(src="https://code.jquery.com/jquery-3.6.0.min.js")
+  script(src="javascripts/map.js")

@@ -1,0 +1,14 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+body { margin: 0; padding: 0; }
+#map { position: absolute; top: 0; bottom: 0; width: 100%; z-index: -1}
+#search_box {z-index: 1; position: absolute; top: 20px; left: 20px}
+#search_input { width: 280px; height: 30px; padding: 10px; border: none; border-radius: 15px;}
+#search_result_box {width: 300px; border-top: 1px solid #ccc; height: auto; border-radius: 20px; background: white;}
+#search_result_list {list-style: none; padding-left: 20px;}
