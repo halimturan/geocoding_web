@@ -13,15 +13,29 @@ router.get('/', function(req, res, next) {
     res.send('respond with a resource');
 });
 
+var makeSortString = (function() {
+    var translate_re = /[IİıÜüÖöŞşĞğÇç]/g;
+    var translate = {
+        "I": "i", "İ": "i", "ı": "i", "Ü": "u", "ü": "u", "Ö": "o", "ö": "o", "Ş": "s", "ş": "s", "ğ": "g", "Ğ": "g", "Ç": "c", "ç": "c"
+    };
+    return function(s) {
+        return ( s.replace(translate_re, function(match) {
+            return translate[match];
+        }) );
+    }
+})();
+
 const getQuery = (req, res) => {
     const {text} = req.body;
-    const sql = 'select * from (select *, SIMILARITY(name, $1) as sml from geocoding.test.address where SIMILARITY(name, $1) > 0.2 limit 20) ahmet order by ahmet.sml DESC limit 5;'
-    pool.query(sql, [text], (error, results) => {
+    // const sql = 'SELECT name, detail_url,  name <-> $1 AS dist FROM address.address ORDER BY dist LIMIT 5;'
+    const sql = 'SELECT name, detail_url, category, address.search <-> $1 AS dist FROM address.address ORDER BY dist LIMIT 5;'
+    // const sql = 'SELECT *, SIMILARITY(name, $1) as sml FROM address.address WHERE  name % $1 ORDER BY sml DESC LIMIT 5';
+    pool.query(sql, [makeSortString(text)], (error, results) => {
         if (error) {
             throw error
         }
         res.status(200).json(results.rows)
-    })
+    });
 }
 router.post('/', function(req, res, next) {
     const {text} = req.body;

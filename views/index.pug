@@ -7,7 +7,8 @@ block stylesheet
 block content
   div(id="map")
   div(id="search_box")
-    input(type="text" placeholder="Arama Yap" onKeyUp="typewatch(function(){alert('Time elapsed!');}, 1000 );" id="search_input")
+    i(class="fa fa-map-pin" style="position: absolute; margin-top: 19px; margin-left: 8px; color: red;")
+    input(type="text" placeholder="Arama Yap" onKeyUp="typewatch(apiEvent, 800 );" id="search_input")
     i(class="fa fa-search" style="margin-left: -25px")
     div(id="search_result_box")
       ul(id="search_result_list")

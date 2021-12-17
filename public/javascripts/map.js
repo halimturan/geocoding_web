@@ -10,10 +10,45 @@ $.getJSON("root.json", function(json) {
         zoom: 12,
         maxZoom: 20,
         minZoom:0,
-        bearing: 10,
-        pitch: 70
     });
 });
+
+let apiEvent = () => {
+    let input_val = $("#search_input");
+    if (input_val.val().length > 2) {
+        $.ajax({
+            type: "POST",
+            url: "/api",
+            data: {"text": input_val.val()},
+            dataType: "json",
+            success: function(resultData){
+                $('#search_result_list').empty();
+                if(resultData.length > 0) {
+                    resultData.map((e, index) => {
+                        let splited_text = e.name.split(',');
+                        let result_item = $('<div></div>');
+                        splited_text.map((e, index) => {
+                            index === 0 ? result_item.append(`<span style="color: #333">${e}</span>`) : result_item.append(`<span style="color: #70757a">,${e}</span>`);
+                        });
+                        $('#search_result_list').append(`
+                        <li data-url="${e.detail_url}" id="result${index}" onclick="defineDataType(this.dataset.url)" style="padding: 7px 5px 7px 1px; cursor: pointer; display: flex">
+                            <i class="fa fa-map-marker-alt" style="color: #bbbbbb; margin-right: 10px"></i> 
+                        </li>`);
+                        $(`#result${index}`).append(result_item);
+                    });
+                } else {
+                    $('#search_result_list').append(`
+                        <li style="padding: 7px 5px 7px 1px; cursor: pointer">
+                            <i class="fa fa-map-marker-alt" style="color: #bbbbbb; margin-right: 10px"></i> Sonuç bulunamadı!
+                        </li>`);
+                }
+            }
+        });
+    } else {
+        $('#search_result_list').empty();
+    }
+}
+
 var typewatch = function(){
     var timer = 0;
     return function(callback, ms){
@@ -26,6 +61,7 @@ function defineDataType(url) {
         map.removeLayer('geocode_layer');
         map.removeSource('geocode_source');
     }
+    url = url.replace('127.0.0.1:8000', '10.6.129.39');
     $.getJSON(url, function(json) {
         const data_type = json.features[0].geometry.type;
         if (data_type === "Polygon") {
