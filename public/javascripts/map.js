@@ -158,23 +158,3 @@ function drawPoint(geojson) {
     });
 }
 
-// $("#search_input").on("change paste keyup", function() {
-//     if($(this).val().length > 2) {
-//         $.ajax({
-//             type: "POST",
-//             url: "/api",
-//             data: {"text": $(this).val()},
-//             dataType: "json",
-//             success: function(resultData){
-//                 $('#search_result_list').empty();
-//                 resultData.map(e => {
-//                     $('#search_result_list').append(`<li data-url="${e.detail_url}" onclick="defineDataType(this.dataset.url)" style="padding: 5px;; cursor: pointer">${e.name}</li>`);
-//                 })
-//             }
-//         });
-//     } else {
-//         $('#search_result_list').empty();
-//     }
-// });
-
-

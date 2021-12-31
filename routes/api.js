@@ -27,9 +27,8 @@ var makeSortString = (function() {
 
 const getQuery = (req, res) => {
     const {text} = req.body;
-    // const sql = 'SELECT name, detail_url,  name <-> $1 AS dist FROM address.address ORDER BY dist LIMIT 5;'
+    // const sql = 'SELECT name, detail_url, category, SIMILARITY(search, $1) as sml FROM address.address WHERE search % $1 ORDER BY sml DESC limit 5';
     const sql = 'SELECT name, detail_url, category, address.search <-> $1 AS dist FROM address.address ORDER BY dist LIMIT 5;'
-    // const sql = 'SELECT *, SIMILARITY(name, $1) as sml FROM address.address WHERE  name % $1 ORDER BY sml DESC LIMIT 5';
     pool.query(sql, [makeSortString(text)], (error, results) => {
         if (error) {
             throw error
