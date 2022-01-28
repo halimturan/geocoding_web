@@ -25,28 +25,35 @@ var makeSortString = (function() {
     }
 })();
 
-const getQuery = (req, res) => {
+router.post('/', function(req, res, next) {
     const {text} = req.body;
     const sql = 'SELECT id, name, detail_url, icon, SIMILARITY(search, $1) as sml FROM geocoding.address.address where  search % $1 ORDER BY index, sml DESC LIMIT 5';
-    //const sql = 'SELECT name, detail_url, icon, address.search <-> $1 AS dist FROM address.address ORDER BY index, dist LIMIT 5;'
     pool.query(sql, [makeSortString(text)], (error, results) => {
         if (error) {
             throw error
         }
         res.status(200).json(results.rows)
     });
-}
-router.post('/', function(req, res, next) {
-    const {text} = req.body;
-    const sql = 'select * from (select *, SIMILARITY(name, $1) as sml from geocoding.test.address where SIMILARITY(name, $1) > 0.2 limit 20) ahmet order by ahmet.sml DESC limit 5;'
-    ///const sql = 'SELECT * FROM geocoding.test.address ORDER BY SIMILARITY(name, $1) DESC LIMIT 5';
-    pool.query(sql, [text], (error, results) => {
+});
+
+router.patch('/', function(req, res, next) {
+    const {id} = req.body;
+    const select_sql = 'SELECT id, index FROM geocoding.address.address WHERE id=$1';
+    pool.query(select_sql, [id], (error, results) => {
         if (error) {
             throw error
         }
-        res.status(200).json(results.rows);
+        const data_id =  results.rows[0].id;
+        let index = results.rows[0].index;
+        index === null || index === 0 ? index = 1 : index = index + 1;
+        const update_sql = 'UPDATE geocoding.address.address SET index = $1 WHERE id = $2';
+        pool.query(update_sql, [index, data_id], (error, results) => {
+            if (error) {
+                throw error
+            }
+            res.status(200).json({"index": index});
+        });
     });
 });
-module.exports = {
-    getQuery
-}
+
+module.exports = router;
