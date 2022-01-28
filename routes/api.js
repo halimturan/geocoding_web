@@ -27,7 +27,7 @@ var makeSortString = (function() {
 
 const getQuery = (req, res) => {
     const {text} = req.body;
-    const sql = 'SELECT name, detail_url, icon, SIMILARITY(search, $1) as sml FROM geocoding.address.address where  search % $1 ORDER BY index, sml DESC LIMIT 5';
+    const sql = 'SELECT id, name, detail_url, icon, SIMILARITY(search, $1) as sml FROM geocoding.address.address where  search % $1 ORDER BY index, sml DESC LIMIT 5';
     //const sql = 'SELECT name, detail_url, icon, address.search <-> $1 AS dist FROM address.address ORDER BY index, dist LIMIT 5;'
     pool.query(sql, [makeSortString(text)], (error, results) => {
         if (error) {
